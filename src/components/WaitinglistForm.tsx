@@ -123,10 +123,11 @@ export const WaitinglistForm: React.FC<WaitinglistFormProps> = ({
 
       setSubmitStatus("error");
       const errorObj = error as {
+        error?: string;
         message?: string;
         details?: Array<{ field: string; message: string }>;
       };
-      const message = errorObj.message || errorMessage;
+      const message = errorObj.error || errorObj.message || errorMessage;
 
       if (showMessages) {
         setStatusMessage(message);
