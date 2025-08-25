@@ -1,0 +1,85 @@
+import React from "react";
+import type { FieldProps } from "@/types";
+
+export interface EmailFieldProps extends FieldProps {
+  placeholder?: string;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export const EmailField: React.FC<EmailFieldProps> = ({
+  value,
+  onChange,
+  config,
+  error,
+  disabled,
+  placeholder,
+  className,
+  style,
+}) => {
+  const fieldConfig = config || {};
+  const finalPlaceholder =
+    placeholder || fieldConfig.placeholder || "Enter your email";
+  const fieldClassName = className || fieldConfig.className || "";
+  const fieldStyle = { ...style, ...fieldConfig.style };
+
+  return (
+    <div style={{ marginBottom: "1rem" }}>
+      {fieldConfig.label && (
+        <label
+          style={{
+            display: "block",
+            marginBottom: "0.5rem",
+            fontWeight: "500",
+            color: "#374151",
+          }}
+        >
+          {fieldConfig.label}
+          {fieldConfig.required && (
+            <span style={{ color: "#ef4444", marginLeft: "2px" }}>*</span>
+          )}
+        </label>
+      )}
+      <input
+        type="email"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={finalPlaceholder}
+        disabled={disabled || fieldConfig.disabled}
+        required={fieldConfig.required}
+        className={fieldClassName}
+        style={{
+          width: "100%",
+          padding: "0.75rem",
+          border: `1px solid ${error ? "#ef4444" : "#d1d5db"}`,
+          borderRadius: "0.375rem",
+          fontSize: "1rem",
+          outline: "none",
+          transition: "border-color 0.2s",
+          ...fieldStyle,
+        }}
+        onFocus={(e) => {
+          if (!error) {
+            e.target.style.borderColor = "#3b82f6";
+          }
+        }}
+        onBlur={(e) => {
+          if (!error) {
+            e.target.style.borderColor = "#d1d5db";
+          }
+        }}
+      />
+      {error && (
+        <div
+          style={{
+            marginTop: "0.25rem",
+            fontSize: "0.875rem",
+            color: "#ef4444",
+          }}
+        >
+          {error}
+        </div>
+      )}
+    </div>
+  );
+};

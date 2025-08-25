@@ -1,0 +1,63 @@
+{
+  "name": "@waitinglist/react",
+  "version": "1.0.0",
+  "description": "React components for Waitinglist.dev integration",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build && tsc --emitDeclarationOnly",
+    "dev": "vite build --watch",
+    "prepare": "bun run build",
+    "lint": "eslint src --ext .ts,.tsx",
+    "type-check": "tsc --noEmit",
+    "preview": "vite preview",
+    "examples": "cd examples && bun install && bun run dev",
+    "examples:build": "cd examples && bun run build"
+  },
+  "keywords": [
+    "waitinglist",
+    "react",
+    "component",
+    "form",
+    "email-collection",
+    "lead-generation",
+    "phone-input",
+    "typescript"
+  ],
+  "author": "Waitinglist.dev",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/waitinglist-dev/waitinglist-react.git"
+  },
+  "homepage": "https://waitinglist.dev",
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.2",
+    "react-phone-number-input": "^3.3.7"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "@typescript-eslint/eslint-plugin": "^6.16.0",
+    "@typescript-eslint/parser": "^6.16.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.10",
+    "vite-plugin-dts": "^3.7.0"
+  }
+}

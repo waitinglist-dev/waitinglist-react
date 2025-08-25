@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@waitinglist/react - Basic Example</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+        background-color: #f8fafc;
+      }
+      .container {
+        background: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+      }
+      h1 {
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+      }
+      .subtitle {
+        color: #64748b;
+        margin-bottom: 2rem;
+      }
+      .example {
+        margin-bottom: 3rem;
+      }
+      .example h2 {
+        color: #374151;
+        border-bottom: 2px solid #e5e7eb;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+      }
+      pre {
+        background: #1e293b;
+        color: #e2e8f0;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        overflow-x: auto;
+        font-size: 0.875rem;
+        margin: 1rem 0;
+      }
+      .form-container {
+        border: 2px dashed #d1d5db;
+        padding: 2rem;
+        border-radius: 0.5rem;
+        background: #f9fafb;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>@waitinglist/react Examples</h1>
+      <p class="subtitle">Interactive examples of the Waitinglist.dev React component</p>
+
+      <div class="example">
+        <h2>Basic Form</h2>
+        <p>Simple email and name collection:</p>
+        <div class="form-container">
+          <div id="basic-form"></div>
+        </div>
+        <pre><code>import { WaitinglistForm } from '@waitinglist/react';
+
+&lt;WaitinglistForm
+  apiKey="wl_demo_key"
+  fields={['email', 'name']}
+  onSuccess={(data) => console.log('Success:', data)}
+/&gt;</code></pre>
+      </div>
+
+      <div class="example">
+        <h2>Advanced Configuration</h2>
+        <p>Custom field configuration with phone number and labels:</p>
+        <div class="form-container">
+          <div id="advanced-form"></div>
+        </div>
+        <pre><code>import { WaitinglistForm } from '@waitinglist/react';
+
+&lt;WaitinglistForm
+  apiKey="wl_demo_key"
+  fields={{
+    email: { 
+      label: "Work Email", 
+      required: true,
+      placeholder: "you@company.com" 
+    },
+    name: { 
+      label: "Full Name",
+      placeholder: "John Doe" 
+    },
+    phone: { 
+      label: "Phone Number",
+      defaultCountry: "US",
+      withCountryCallingCode: true 
+    }
+  }}
+  submitButtonText="Join Our Beta"
+  successMessage="Thanks for joining our beta program!"
+/&gt;</code></pre>
+      </div>
+
+      <div class="example">
+        <h2>Individual Field Components</h2>
+        <p>Using individual field components for custom layouts:</p>
+        <div class="form-container">
+          <div id="custom-form"></div>
+        </div>
+        <pre><code>import { EmailField, NameField, PhoneField } from '@waitinglist/react';
+
+// Custom form with individual components
+function CustomForm() {
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+
+  return (
+    &lt;div&gt;
+      &lt;EmailField value={email} onChange={setEmail} /&gt;
+      &lt;NameField value={name} onChange={setName} /&gt;
+      &lt;PhoneField value={phone} onChange={setPhone} /&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+      </div>
+    </div>
+
+    <script type="module" src="./main.tsx"></script>
+  </body>
+</html>
