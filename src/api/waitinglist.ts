@@ -43,10 +43,15 @@ export class WaitinglistApi {
         };
 
         if (error.response?.data) {
-          const errorData = error.response.data as any;
-          waitinglistError.error = errorData.error || "Request failed";
-          waitinglistError.message = errorData.message || error.message;
-          waitinglistError.details = errorData.details;
+          const errorData = error.response.data as Record<string, unknown>;
+          waitinglistError.error =
+            (errorData.error as string) || "Request failed";
+          waitinglistError.message =
+            (errorData.message as string) || error.message;
+          waitinglistError.details = errorData.details as Array<{
+            field: string;
+            message: string;
+          }>;
         }
 
         throw waitinglistError;
@@ -93,21 +98,21 @@ export class WaitinglistApi {
     });
   }
 
-  async getProjectInfo(): Promise<any> {
+  async getProjectInfo(): Promise<unknown> {
     return this.retryRequest(async () => {
       const response = await this.client.get("/api/v1/project");
       return response.data;
     });
   }
 
-  async verifyEmail(token: string): Promise<any> {
+  async verifyEmail(token: string): Promise<unknown> {
     return this.retryRequest(async () => {
       const response = await this.client.post("/api/v1/verify", { token });
       return response.data;
     });
   }
 
-  async unsubscribe(token: string): Promise<any> {
+  async unsubscribe(token: string): Promise<unknown> {
     return this.retryRequest(async () => {
       const response = await this.client.post("/api/v1/unsubscribe", { token });
       return response.data;

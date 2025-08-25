@@ -19,7 +19,7 @@ export const validatePhone = (phone: string): string | undefined => {
   }
 
   // Basic phone validation - accepts various formats
-  const phoneRegex = /^[\+]?[\d\s\-\(\)]{10,15}$/;
+  const phoneRegex = /^[+]?[\d\s\-()]{10,15}$/;
   if (!phoneRegex.test(phone)) {
     return "Please enter a valid phone number";
   }

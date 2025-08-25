@@ -8,6 +8,7 @@ import type {
   FieldsConfig,
   FieldConfig,
   ValidationErrors,
+  WaitinglistError,
 } from "@/types";
 
 export const WaitinglistForm: React.FC<WaitinglistFormProps> = ({
@@ -117,20 +118,24 @@ export const WaitinglistForm: React.FC<WaitinglistFormProps> = ({
       }
 
       onSuccess?.(response.data);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Waitinglist signup error:", error);
 
       setSubmitStatus("error");
-      const message = error.message || errorMessage;
+      const errorObj = error as {
+        message?: string;
+        details?: Array<{ field: string; message: string }>;
+      };
+      const message = errorObj.message || errorMessage;
 
       if (showMessages) {
         setStatusMessage(message);
       }
 
       // Handle field-specific errors
-      if (error.details) {
+      if (errorObj.details) {
         const fieldErrors: ValidationErrors = {};
-        error.details.forEach((detail: any) => {
+        errorObj.details.forEach((detail) => {
           if (detail.field in formData) {
             fieldErrors[detail.field as keyof ValidationErrors] =
               detail.message;
@@ -139,7 +144,7 @@ export const WaitinglistForm: React.FC<WaitinglistFormProps> = ({
         setErrors(fieldErrors);
       }
 
-      onError?.(error);
+      onError?.(error as WaitinglistError);
     } finally {
       setIsLoading(false);
     }
