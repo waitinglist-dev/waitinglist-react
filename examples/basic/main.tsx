@@ -9,11 +9,76 @@ import {
 } from "../../src/index";
 import type { WaitinglistEntry } from "../../src/types";
 
-// Demo API key - in real usage, this would be your actual API key
-const DEMO_API_KEY = "wl_demo_key";
+// Default demo API key - users can input their own
+const DEFAULT_DEMO_API_KEY = "wl_demo_key";
+
+// API Key Input Component
+function ApiKeyInput({
+  apiKey,
+  onChange,
+}: {
+  apiKey: string;
+  onChange: (key: string) => void;
+}) {
+  return (
+    <div
+      style={{
+        marginBottom: "2rem",
+        padding: "1rem",
+        backgroundColor: "#f8fafc",
+        border: "2px dashed #e2e8f0",
+        borderRadius: "0.5rem",
+      }}
+    >
+      <label
+        style={{
+          display: "block",
+          marginBottom: "0.5rem",
+          fontSize: "0.875rem",
+          fontWeight: "600",
+          color: "#374151",
+        }}
+      >
+        API Key (use "wl_demo_key" for mock mode):
+      </label>
+      <input
+        type="text"
+        value={apiKey}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder="Enter your API key (e.g., wl_abc123...)"
+        style={{
+          width: "100%",
+          padding: "0.75rem",
+          border: "1px solid #d1d5db",
+          borderRadius: "0.375rem",
+          fontSize: "0.875rem",
+          fontFamily: "monospace",
+          backgroundColor: "white",
+        }}
+      />
+      <p
+        style={{
+          marginTop: "0.5rem",
+          fontSize: "0.75rem",
+          color: "#6b7280",
+        }}
+      >
+        Get your API key from{" "}
+        <a
+          href="https://app.waitinglist.dev"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: "#3b82f6" }}
+        >
+          app.waitinglist.dev
+        </a>
+      </p>
+    </div>
+  );
+}
 
 // Basic Form Example
-function BasicExample() {
+function BasicExample({ apiKey }: { apiKey: string }) {
   const handleSuccess = (data: WaitinglistEntry) => {
     alert(`Success! You're #${data.position} in line.`);
     console.log("Basic form success:", data);
@@ -26,7 +91,7 @@ function BasicExample() {
 
   return (
     <WaitinglistForm
-      apiKey={DEMO_API_KEY}
+      apiKey={apiKey}
       fields={["email", "name"]}
       onSuccess={handleSuccess}
       onError={handleError}
@@ -36,7 +101,7 @@ function BasicExample() {
 }
 
 // Advanced Form Example
-function AdvancedExample() {
+function AdvancedExample({ apiKey }: { apiKey: string }) {
   const handleSuccess = (data: WaitinglistEntry) => {
     alert(`Welcome to the beta! You're #${data.position} in line.`);
     console.log("Advanced form success:", data);
@@ -49,7 +114,7 @@ function AdvancedExample() {
 
   return (
     <WaitinglistForm
-      apiKey={DEMO_API_KEY}
+      apiKey={apiKey}
       fields={{
         email: {
           label: "Work Email",
@@ -76,7 +141,7 @@ function AdvancedExample() {
 }
 
 // Custom Form Example with Individual Components
-function CustomExample() {
+function CustomExample({ apiKey }: { apiKey: string }) {
   const [formData, setFormData] = useState({
     email: "",
     name: "",
@@ -89,7 +154,7 @@ function CustomExample() {
     setLoading(true);
 
     try {
-      const result = await signupToWaitinglist(DEMO_API_KEY, {
+      const result = await signupToWaitinglist(apiKey, {
         email: formData.email,
         name: formData.name,
         phone: formData.phone,
@@ -167,15 +232,67 @@ function CustomExample() {
   );
 }
 
-// App component is no longer needed - we'll mount components directly
+// Global API key state
+let globalApiKey = DEFAULT_DEMO_API_KEY;
 
-// Note: In development mode, we'll mock the API calls
-if (DEMO_API_KEY === "wl_demo_key") {
-  console.warn("🚧 Demo Mode: API calls are mocked for demonstration purposes");
+// API Key Input Component at the top
+function ApiKeyContainer() {
+  const [apiKey, setApiKey] = useState(DEFAULT_DEMO_API_KEY);
 
-  // Mock the API for demo purposes
-  const originalSignup = signupToWaitinglist;
-  (window as any).signupToWaitinglist = async (apiKey: string, data: any) => {
+  const handleApiKeyChange = (newKey: string) => {
+    setApiKey(newKey);
+    globalApiKey = newKey;
+    // Re-render all forms with new API key
+    renderAllForms();
+  };
+
+  return <ApiKeyInput apiKey={apiKey} onChange={handleApiKeyChange} />;
+}
+
+// Function to render all forms
+function renderAllForms() {
+  const basicContainer = document.getElementById("basic-form");
+  const advancedContainer = document.getElementById("advanced-form");
+  const customContainer = document.getElementById("custom-form");
+
+  if (basicContainer) {
+    const root =
+      (basicContainer as any)._reactRoot || createRoot(basicContainer);
+    if (!(basicContainer as any)._reactRoot) {
+      (basicContainer as any)._reactRoot = root;
+    }
+    root.render(<BasicExample apiKey={globalApiKey} />);
+  }
+
+  if (advancedContainer) {
+    const root =
+      (advancedContainer as any)._reactRoot || createRoot(advancedContainer);
+    if (!(advancedContainer as any)._reactRoot) {
+      (advancedContainer as any)._reactRoot = root;
+    }
+    root.render(<AdvancedExample apiKey={globalApiKey} />);
+  }
+
+  if (customContainer) {
+    const root =
+      (customContainer as any)._reactRoot || createRoot(customContainer);
+    if (!(customContainer as any)._reactRoot) {
+      (customContainer as any)._reactRoot = root;
+    }
+    root.render(<CustomExample apiKey={globalApiKey} />);
+  }
+}
+
+// Note: In development mode, we'll mock the API calls for demo key
+console.warn(
+  "🚧 Demo Mode: When using 'wl_demo_key', API calls are mocked for demonstration purposes"
+);
+
+// Mock the API for demo purposes when using the demo key
+const originalSignup = signupToWaitinglist;
+const mockSignup = async (apiKey: string, data: any) => {
+  // Only mock when using demo key
+  if (apiKey === DEFAULT_DEMO_API_KEY) {
     console.log("📧 Mock API Call:", { apiKey, data });
 
     // Simulate API delay
@@ -194,22 +311,23 @@ if (DEMO_API_KEY === "wl_demo_key") {
       },
       message: "Successfully added to waiting list (demo)",
     };
-  };
-}
+  } else {
+    // Use real API for actual API keys
+    return originalSignup(apiKey, data);
+  }
+};
 
-// Mount each component to its respective container
-const basicContainer = document.getElementById("basic-form");
-const advancedContainer = document.getElementById("advanced-form");
-const customContainer = document.getElementById("custom-form");
+// Replace the global function with our conditional mock
+(window as any).signupToWaitinglist = mockSignup;
 
-if (basicContainer) {
-  createRoot(basicContainer).render(<BasicExample />);
-}
+// Initialize the application
+document.addEventListener("DOMContentLoaded", () => {
+  // Render API key input at the top
+  const container = document.getElementById("root");
+  if (container) {
+    createRoot(container).render(<ApiKeyContainer />);
+  }
 
-if (advancedContainer) {
-  createRoot(advancedContainer).render(<AdvancedExample />);
-}
-
-if (customContainer) {
-  createRoot(customContainer).render(<CustomExample />);
-}
+  // Render all forms in their designated containers
+  renderAllForms();
+});

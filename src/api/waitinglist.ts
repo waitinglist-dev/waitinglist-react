@@ -4,6 +4,9 @@ import type {
   WaitinglistResponse,
   WaitinglistError,
   WaitinglistApiOptions,
+  ProjectInfoResponse,
+  VerificationResponse,
+  UnsubscribeResponse,
 } from "@/types";
 
 export class WaitinglistApi {
@@ -98,23 +101,31 @@ export class WaitinglistApi {
     });
   }
 
-  async getProjectInfo(): Promise<unknown> {
+  async getProjectInfo(): Promise<ProjectInfoResponse> {
     return this.retryRequest(async () => {
-      const response = await this.client.get("/api/v1/project");
+      const response = await this.client.get<ProjectInfoResponse>(
+        "/api/v1/project"
+      );
       return response.data;
     });
   }
 
-  async verifyEmail(token: string): Promise<unknown> {
+  async verifyEmail(token: string): Promise<VerificationResponse> {
     return this.retryRequest(async () => {
-      const response = await this.client.post("/api/v1/verify", { token });
+      const response = await this.client.post<VerificationResponse>(
+        "/api/v1/verify",
+        { token }
+      );
       return response.data;
     });
   }
 
-  async unsubscribe(token: string): Promise<unknown> {
+  async unsubscribe(token: string): Promise<UnsubscribeResponse> {
     return this.retryRequest(async () => {
-      const response = await this.client.post("/api/v1/unsubscribe", { token });
+      const response = await this.client.post<UnsubscribeResponse>(
+        "/api/v1/unsubscribe",
+        { token }
+      );
       return response.data;
     });
   }
@@ -136,4 +147,33 @@ export const signupToWaitinglist = async (
 ): Promise<WaitinglistResponse> => {
   const api = createWaitinglistApi(apiKey, options);
   return api.signup(data);
+};
+
+// Standalone function for getting project info
+export const getProjectInfo = async (
+  apiKey: string,
+  options?: WaitinglistApiOptions
+): Promise<ProjectInfoResponse> => {
+  const api = createWaitinglistApi(apiKey, options);
+  return api.getProjectInfo();
+};
+
+// Standalone function for email verification
+export const verifyEmail = async (
+  apiKey: string,
+  token: string,
+  options?: WaitinglistApiOptions
+): Promise<VerificationResponse> => {
+  const api = createWaitinglistApi(apiKey, options);
+  return api.verifyEmail(token);
+};
+
+// Standalone function for unsubscribing
+export const unsubscribe = async (
+  apiKey: string,
+  token: string,
+  options?: WaitinglistApiOptions
+): Promise<UnsubscribeResponse> => {
+  const api = createWaitinglistApi(apiKey, options);
+  return api.unsubscribe(token);
 };

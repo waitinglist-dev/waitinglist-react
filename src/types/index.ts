@@ -16,6 +16,24 @@ export interface WaitinglistResponse {
   message: string;
 }
 
+export interface ProjectInfoResponse {
+  success: boolean;
+  data: {
+    project_id: string;
+    timestamp: string;
+  };
+}
+
+export interface VerificationResponse {
+  success: boolean;
+  message: string;
+}
+
+export interface UnsubscribeResponse {
+  success: boolean;
+  message: string;
+}
+
 export interface WaitinglistError {
   success: false;
   error: string;

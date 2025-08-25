@@ -9,6 +9,9 @@ export {
   WaitinglistApi,
   createWaitinglistApi,
   signupToWaitinglist,
+  getProjectInfo,
+  verifyEmail,
+  unsubscribe,
 } from "@/api/waitinglist";
 
 // Utility functions
@@ -28,6 +31,9 @@ export type {
   WaitinglistFormData,
   WaitinglistFormProps,
   WaitinglistApiOptions,
+  ProjectInfoResponse,
+  VerificationResponse,
+  UnsubscribeResponse,
   FieldConfig,
   FieldsConfig,
   FieldProps,
