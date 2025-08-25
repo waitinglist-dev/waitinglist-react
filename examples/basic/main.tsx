@@ -167,27 +167,7 @@ function CustomExample() {
   );
 }
 
-// Render all examples
-function App() {
-  return (
-    <>
-      {/* Basic Form */}
-      <div id="basic-form">
-        <BasicExample />
-      </div>
-
-      {/* Advanced Form */}
-      <div id="advanced-form">
-        <AdvancedExample />
-      </div>
-
-      {/* Custom Form */}
-      <div id="custom-form">
-        <CustomExample />
-      </div>
-    </>
-  );
-}
+// App component is no longer needed - we'll mount components directly
 
 // Note: In development mode, we'll mock the API calls
 if (DEMO_API_KEY === "wl_demo_key") {
@@ -217,14 +197,19 @@ if (DEMO_API_KEY === "wl_demo_key") {
   };
 }
 
-// Render the app
-const container = document.getElementById("root");
-if (!container) {
-  // Create root container if it doesn't exist
-  const root = document.createElement("div");
-  root.id = "root";
-  document.body.appendChild(root);
-  createRoot(root).render(<App />);
-} else {
-  createRoot(container).render(<App />);
+// Mount each component to its respective container
+const basicContainer = document.getElementById("basic-form");
+const advancedContainer = document.getElementById("advanced-form");
+const customContainer = document.getElementById("custom-form");
+
+if (basicContainer) {
+  createRoot(basicContainer).render(<BasicExample />);
+}
+
+if (advancedContainer) {
+  createRoot(advancedContainer).render(<AdvancedExample />);
+}
+
+if (customContainer) {
+  createRoot(customContainer).render(<CustomExample />);
 }
