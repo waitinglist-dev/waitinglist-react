@@ -232,55 +232,155 @@ function CustomExample({ apiKey }: { apiKey: string }) {
   );
 }
 
-// Global API key state
-let globalApiKey = DEFAULT_DEMO_API_KEY;
-
-// API Key Input Component at the top
-function ApiKeyContainer() {
+// Main App component that manages all examples
+function App() {
   const [apiKey, setApiKey] = useState(DEFAULT_DEMO_API_KEY);
 
-  const handleApiKeyChange = (newKey: string) => {
-    setApiKey(newKey);
-    globalApiKey = newKey;
-    // Re-render all forms with new API key
-    renderAllForms();
-  };
+  return (
+    <div
+      className="container"
+      style={{
+        fontFamily:
+          '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
+        maxWidth: "800px",
+        margin: "0 auto",
+        padding: "2rem",
+        backgroundColor: "#f8fafc",
+      }}
+    >
+      <h1 style={{ color: "#1e293b", marginBottom: "0.5rem" }}>
+        @waitinglist/react Examples
+      </h1>
+      <p style={{ color: "#64748b", marginBottom: "2rem" }}>
+        Interactive examples of the Waitinglist.dev React component
+      </p>
 
-  return <ApiKeyInput apiKey={apiKey} onChange={handleApiKeyChange} />;
-}
+      {/* API Key Input */}
+      <div style={{ marginBottom: "2rem" }}>
+        <ApiKeyInput apiKey={apiKey} onChange={setApiKey} />
+      </div>
 
-// Function to render all forms
-function renderAllForms() {
-  const basicContainer = document.getElementById("basic-form");
-  const advancedContainer = document.getElementById("advanced-form");
-  const customContainer = document.getElementById("custom-form");
+      <div style={{ marginBottom: "3rem" }}>
+        <h2
+          style={{
+            color: "#374151",
+            borderBottom: "2px solid #e5e7eb",
+            paddingBottom: "0.5rem",
+            marginBottom: "1rem",
+          }}
+        >
+          Basic Form
+        </h2>
+        <p>Simple email and name collection:</p>
+        <div
+          style={{
+            border: "2px dashed #d1d5db",
+            padding: "2rem",
+            borderRadius: "0.5rem",
+            background: "#f9fafb",
+            marginBottom: "1rem",
+          }}
+        >
+          <BasicExample apiKey={apiKey} />
+        </div>
+        <pre
+          style={{
+            background: "#1e293b",
+            color: "#e2e8f0",
+            padding: "1rem",
+            borderRadius: "0.5rem",
+            overflowX: "auto",
+            fontSize: "0.875rem",
+            margin: "1rem 0",
+          }}
+        >
+          <code>{`import { WaitinglistForm } from '@waitinglist/react';
 
-  if (basicContainer) {
-    const root =
-      (basicContainer as any)._reactRoot || createRoot(basicContainer);
-    if (!(basicContainer as any)._reactRoot) {
-      (basicContainer as any)._reactRoot = root;
+<WaitinglistForm
+  apiKey="wl_demo_key"
+  fields={['email', 'name']}
+  onSuccess={(data) => console.log('Success:', data)}
+/>`}</code>
+        </pre>
+      </div>
+
+      <div style={{ marginBottom: "3rem" }}>
+        <h2
+          style={{
+            color: "#374151",
+            borderBottom: "2px solid #e5e7eb",
+            paddingBottom: "0.5rem",
+            marginBottom: "1rem",
+          }}
+        >
+          Advanced Configuration
+        </h2>
+        <p>Custom field configuration with phone number and labels:</p>
+        <div
+          style={{
+            border: "2px dashed #d1d5db",
+            padding: "2rem",
+            borderRadius: "0.5rem",
+            background: "#f9fafb",
+            marginBottom: "1rem",
+          }}
+        >
+          <AdvancedExample apiKey={apiKey} />
+        </div>
+        <pre>
+          <code>{`import { WaitinglistForm } from '@waitinglist/react';
+
+<WaitinglistForm
+  apiKey="wl_demo_key"
+  fields={{
+    email: { 
+      label: "Work Email", 
+      required: true,
+      placeholder: "you@company.com" 
+    },
+    name: { 
+      label: "Full Name",
+      placeholder: "John Doe" 
+    },
+    phone: { 
+      label: "Phone Number",
+      defaultCountry: "US",
+      withCountryCallingCode: true 
     }
-    root.render(<BasicExample apiKey={globalApiKey} />);
-  }
+  }}
+  submitButtonText="Join Our Beta"
+  successMessage="Thanks for joining our beta program!"
+/>`}</code>
+        </pre>
+      </div>
 
-  if (advancedContainer) {
-    const root =
-      (advancedContainer as any)._reactRoot || createRoot(advancedContainer);
-    if (!(advancedContainer as any)._reactRoot) {
-      (advancedContainer as any)._reactRoot = root;
-    }
-    root.render(<AdvancedExample apiKey={globalApiKey} />);
-  }
+      <div className="example">
+        <h2>Individual Field Components</h2>
+        <p>Using individual field components for custom layouts:</p>
+        <div className="form-container">
+          <CustomExample apiKey={apiKey} />
+        </div>
+        <pre>
+          <code>{`import { EmailField, NameField, PhoneField } from '@waitinglist/react';
 
-  if (customContainer) {
-    const root =
-      (customContainer as any)._reactRoot || createRoot(customContainer);
-    if (!(customContainer as any)._reactRoot) {
-      (customContainer as any)._reactRoot = root;
-    }
-    root.render(<CustomExample apiKey={globalApiKey} />);
-  }
+// Custom form with individual components
+function CustomForm() {
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+
+  return (
+    <div>
+      <EmailField value={email} onChange={setEmail} />
+      <NameField value={name} onChange={setName} />
+      <PhoneField value={phone} onChange={setPhone} />
+    </div>
+  );
+}`}</code>
+        </pre>
+      </div>
+    </div>
+  );
 }
 
 // Note: In development mode, we'll mock the API calls for demo key
@@ -322,12 +422,8 @@ const mockSignup = async (apiKey: string, data: any) => {
 
 // Initialize the application
 document.addEventListener("DOMContentLoaded", () => {
-  // Render API key input at the top
   const container = document.getElementById("root");
   if (container) {
-    createRoot(container).render(<ApiKeyContainer />);
+    createRoot(container).render(<App />);
   }
-
-  // Render all forms in their designated containers
-  renderAllForms();
 });

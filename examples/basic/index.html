@@ -55,86 +55,8 @@
     </style>
   </head>
   <body>
-    <div class="container">
-      <h1>@waitinglist/react Examples</h1>
-      <p class="subtitle">
-        Interactive examples of the Waitinglist.dev React component
-      </p>
-
-      <!-- API Key Input -->
-      <div id="root" style="margin-bottom: 2rem">
-        <!-- API key input will render here -->
-      </div>
-
-      <div class="example">
-        <h2>Basic Form</h2>
-        <p>Simple email and name collection:</p>
-        <div class="form-container" id="basic-form">
-          <!-- Basic form will be rendered here -->
-        </div>
-        <pre><code>import { WaitinglistForm } from '@waitinglist/react';
-
-&lt;WaitinglistForm
-  apiKey="wl_demo_key"
-  fields={['email', 'name']}
-  onSuccess={(data) => console.log('Success:', data)}
-/&gt;</code></pre>
-      </div>
-
-      <div class="example">
-        <h2>Advanced Configuration</h2>
-        <p>Custom field configuration with phone number and labels:</p>
-        <div class="form-container" id="advanced-form">
-          <!-- Advanced form will be rendered here -->
-        </div>
-        <pre><code>import { WaitinglistForm } from '@waitinglist/react';
-
-&lt;WaitinglistForm
-  apiKey="wl_demo_key"
-  fields={{
-    email: { 
-      label: "Work Email", 
-      required: true,
-      placeholder: "you@company.com" 
-    },
-    name: { 
-      label: "Full Name",
-      placeholder: "John Doe" 
-    },
-    phone: { 
-      label: "Phone Number",
-      defaultCountry: "US",
-      withCountryCallingCode: true 
-    }
-  }}
-  submitButtonText="Join Our Beta"
-  successMessage="Thanks for joining our beta program!"
-/&gt;</code></pre>
-      </div>
-
-      <div class="example">
-        <h2>Individual Field Components</h2>
-        <p>Using individual field components for custom layouts:</p>
-        <div class="form-container" id="custom-form">
-          <!-- Custom form will be rendered here -->
-        </div>
-        <pre><code>import { EmailField, NameField, PhoneField } from '@waitinglist/react';
-
-// Custom form with individual components
-function CustomForm() {
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-
-  return (
-    &lt;div&gt;
-      &lt;EmailField value={email} onChange={setEmail} /&gt;
-      &lt;NameField value={name} onChange={setName} /&gt;
-      &lt;PhoneField value={phone} onChange={setPhone} /&gt;
-    &lt;/div&gt;
-  );
-}</code></pre>
-      </div>
+    <div id="root">
+      <!-- React app will render here -->
     </div>
 
     <script type="module" src="./main.tsx"></script>
