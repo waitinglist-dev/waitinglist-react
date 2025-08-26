@@ -52,12 +52,21 @@ export const PhoneField: React.FC<PhoneFieldProps> = ({
       : fieldConfig.showCountrySelect ?? showCountrySelect;
 
   // Determine country from value or use default
+  // If allowCountryChange is false, always use the configured default country
   const [selectedCountry, setSelectedCountry] = useState(() => {
+    const configuredCountry = fieldConfig.defaultCountry || defaultCountry;
+
+    // If country change is not allowed, always use the configured country
+    if (finalAllowCountryChange === false) {
+      return configuredCountry;
+    }
+
+    // Otherwise, try to detect from value first
     if (value) {
       const detected = detectCountryFromPhone(value);
-      return COUNTRY_DATA[detected] ? detected : defaultCountry;
+      return COUNTRY_DATA[detected] ? detected : configuredCountry;
     }
-    return fieldConfig.defaultCountry || defaultCountry;
+    return configuredCountry;
   });
 
   const countryData = COUNTRY_DATA[selectedCountry];
@@ -95,13 +104,28 @@ export const PhoneField: React.FC<PhoneFieldProps> = ({
 
   const handlePhoneChange = useCallback(
     (phoneNumber: string) => {
+      // Ensure we always have the correct country data
+      const currentCountryData = COUNTRY_DATA[selectedCountry];
+
       // Combine dial code with phone number for the full value, with a space for readability
       const fullPhoneNumber = phoneNumber
-        ? `${countryData?.dialCode || ""} ${phoneNumber}`.trim()
+        ? `${currentCountryData?.dialCode || ""} ${phoneNumber}`.trim()
         : "";
       onChange(fullPhoneNumber);
+
+      // Auto-detect country only if country change is allowed and we have a value with dial code
+      if (
+        finalAllowCountryChange &&
+        phoneNumber &&
+        phoneNumber.startsWith("+")
+      ) {
+        const detected = detectCountryFromPhone(phoneNumber);
+        if (detected !== selectedCountry && COUNTRY_DATA[detected]) {
+          setSelectedCountry(detected);
+        }
+      }
     },
-    [onChange, countryData?.dialCode]
+    [onChange, selectedCountry, finalAllowCountryChange]
   );
 
   // For validation, use the full phone number that includes the dial code
