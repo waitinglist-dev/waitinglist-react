@@ -1,6 +1,6 @@
 # @waitinglist/react
 
-React components for easy Waitinglist.dev integration. Add a beautiful, customizable waiting list form to your React application in minutes.
+React components for easy waitinglist.dev integration. Add a beautiful, customizable waiting list form to your React application in minutes.
 
 ## Installation
 
@@ -53,7 +53,7 @@ The main form component that handles everything for you.
 
 | Prop               | Type                         | Default                  | Description                  |
 | ------------------ | ---------------------------- | ------------------------ | ---------------------------- |
-| `apiKey`           | `string`                     | _required_               | Your Waitinglist.dev API key |
+| `apiKey`           | `string`                     | _required_               | Your waitinglist.dev API key |
 | `fields`           | `string[]` or `FieldsConfig` | `['email', 'name']`      | Fields to show in the form   |
 | `onSuccess`        | `(data) => void`             | -                        | Called when signup succeeds  |
 | `onError`          | `(error) => void`            | -                        | Called when signup fails     |
@@ -385,4 +385,4 @@ bun run lint
 
 ## License
 
-MIT © Waitinglist.dev
+MIT © waitinglist.dev

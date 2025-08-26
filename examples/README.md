@@ -5,12 +5,14 @@ This directory contains interactive examples demonstrating how to use the `@wait
 ## Running the Examples
 
 1. **Install dependencies:**
+
    ```bash
    cd examples
    bun install
    ```
 
 2. **Start the development server:**
+
    ```bash
    bun run dev
    ```
@@ -21,10 +23,13 @@ This directory contains interactive examples demonstrating how to use the `@wait
 ## Examples Included
 
 ### 1. Basic Form
+
 Simple email and name collection with minimal configuration.
 
 ### 2. Advanced Configuration
+
 Demonstrates custom field configuration including:
+
 - Custom labels and placeholders
 - Phone number input with country selection
 - Required field validation
@@ -32,6 +37,7 @@ Demonstrates custom field configuration including:
 - Success messages
 
 ### 3. Individual Field Components
+
 Shows how to use individual field components for complete custom layouts.
 
 ## Sample Code Files
@@ -47,7 +53,7 @@ Shows how to use individual field components for complete custom layouts.
 
 When running the examples with the demo API key (`wl_demo_key`), all API calls are mocked to demonstrate functionality without requiring a real API key.
 
-For production usage, replace the demo key with your actual Waitinglist.dev API key from [app.waitinglist.dev](https://app.waitinglist.dev).
+For production usage, replace the demo key with your actual waitinglist.dev API key from [app.waitinglist.dev](https://app.waitinglist.dev).
 
 ## Customization
 

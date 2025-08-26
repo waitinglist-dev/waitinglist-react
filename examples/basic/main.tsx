@@ -252,7 +252,7 @@ function App() {
         @waitinglist/react Examples
       </h1>
       <p style={{ color: "#64748b", marginBottom: "2rem" }}>
-        Interactive examples of the Waitinglist.dev React component
+        Interactive examples of the waitinglist.dev React component
       </p>
 
       {/* API Key Input */}

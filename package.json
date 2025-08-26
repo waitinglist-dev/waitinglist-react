@@ -1,7 +1,7 @@
 {
   "name": "@waitinglist/react",
-  "version": "1.0.2",
-  "description": "React components for Waitinglist.dev integration",
+  "version": "1.0.3",
+  "description": "React components for waitinglist.dev integration",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
@@ -39,7 +39,7 @@
     "phone-input",
     "typescript"
   ],
-  "author": "Waitinglist.dev",
+  "author": "waitinglist.dev",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -48,11 +48,11 @@
   "homepage": "https://waitinglist.dev",
   "peerDependencies": {
     "react": ">=16.8.0",
-    "react-dom": ">=16.8.0"
+    "react-dom": ">=16.8.0",
+    "react-phone-number-input": "^3.3.7"
   },
   "dependencies": {
-    "axios": "^1.6.2",
-    "react-phone-number-input": "^3.3.7"
+    "axios": "^1.6.2"
   },
   "publishConfig": {
     "access": "public"
