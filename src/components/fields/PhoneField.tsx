@@ -165,6 +165,16 @@ export const PhoneField: React.FC<PhoneFieldProps> = ({
           disabled={disabled || fieldConfig.disabled}
           placeholder={finalPlaceholder}
           maskChar=" "
+          onFocus={(e) => {
+            if (!error && isValid) {
+              e.target.style.borderColor = "#3b82f6";
+            }
+          }}
+          onBlur={(e) => {
+            if (!error && isValid) {
+              e.target.style.borderColor = "#d1d5db";
+            }
+          }}
         >
           {(inputProps: React.InputHTMLAttributes<HTMLInputElement>) => (
             <input
@@ -183,16 +193,6 @@ export const PhoneField: React.FC<PhoneFieldProps> = ({
                 outline: "none",
                 transition: "border-color 0.2s",
                 ...fieldStyle,
-              }}
-              onFocus={(e) => {
-                if (!error && isValid) {
-                  e.target.style.borderColor = "#3b82f6";
-                }
-              }}
-              onBlur={(e) => {
-                if (!error && isValid) {
-                  e.target.style.borderColor = "#d1d5db";
-                }
               }}
             />
           )}
