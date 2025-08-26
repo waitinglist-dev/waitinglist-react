@@ -167,12 +167,18 @@ export const WaitinglistForm: React.FC<WaitinglistFormProps> = ({
       setSubmitStatus("error");
       const errorObj = error as WaitinglistError;
 
-      // Prioritize API error message over generic frontend message
-      let message = errorMessage; // Default fallback
-      if (errorObj.error) {
-        message = errorObj.error; // API error message has highest priority
+      // Priority: 1) API error message (most specific), 2) Custom errorMessage prop, 3) Generic fallback
+      let message = "Something went wrong. Please try again."; // Generic fallback
+
+      if (errorObj.error && errorObj.error !== "Request failed") {
+        // Use API error message if it's specific and meaningful
+        message = errorObj.error;
+      } else if (errorMessage) {
+        // Use custom error message provided by user
+        message = errorMessage;
       } else if (errorObj.message) {
-        message = errorObj.message; // API message as secondary priority
+        // Last resort: use API message if available
+        message = errorObj.message;
       }
 
       if (showMessages) {

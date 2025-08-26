@@ -40,18 +40,19 @@ export class WaitinglistApi {
       (response) => response,
       (error: AxiosError) => {
         let apiErrorMessage = "Request failed";
-        let apiMessage = error.message;
+        let apiMessage: string | undefined;
         let details: Array<{ field: string; message: string }> | undefined;
 
         // Extract error information from API response
         if (error.response?.data) {
           const errorData = error.response.data as Record<string, unknown>;
 
-          // Prioritize API error message over axios error message
+          // Use API error message if available
           if (errorData.error && typeof errorData.error === "string") {
             apiErrorMessage = errorData.error;
           }
 
+          // Only use API message if provided, don't fall back to axios message
           if (errorData.message && typeof errorData.message === "string") {
             apiMessage = errorData.message;
           }
@@ -65,7 +66,7 @@ export class WaitinglistApi {
         const waitinglistError: WaitinglistError = {
           success: false,
           error: apiErrorMessage,
-          message: apiMessage,
+          message: apiMessage, // This will be undefined if API doesn't provide a message
           status: error.response?.status,
           details,
         };
