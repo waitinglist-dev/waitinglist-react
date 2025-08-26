@@ -75,6 +75,20 @@ export const WaitinglistForm: React.FC<WaitinglistFormProps> = ({
     [errors, submitStatus]
   );
 
+  // Helper function to extract field-specific props from config
+  const getFieldProps = useCallback((config: FieldConfig) => {
+    const {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      label: _label,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      required: _required,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      disabled: _configDisabled,
+      ...fieldProps
+    } = config;
+    return fieldProps;
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -167,6 +181,7 @@ export const WaitinglistForm: React.FC<WaitinglistFormProps> = ({
           config={fieldsConfig.email}
           error={errors.email}
           disabled={disabled || isLoading}
+          {...getFieldProps(fieldsConfig.email)}
         />
       )}
 
@@ -177,6 +192,7 @@ export const WaitinglistForm: React.FC<WaitinglistFormProps> = ({
           config={fieldsConfig.name}
           error={errors.name}
           disabled={disabled || isLoading}
+          {...getFieldProps(fieldsConfig.name)}
         />
       )}
 
@@ -187,6 +203,7 @@ export const WaitinglistForm: React.FC<WaitinglistFormProps> = ({
           config={fieldsConfig.phone}
           error={errors.phone}
           disabled={disabled || isLoading}
+          {...getFieldProps(fieldsConfig.phone)}
         />
       )}
 

@@ -45,6 +45,7 @@ export interface WaitinglistError {
 }
 
 export interface FieldConfig {
+  // Basic field options
   placeholder?: string;
   label?: string;
   required?: boolean;
