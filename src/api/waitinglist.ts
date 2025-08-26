@@ -39,24 +39,36 @@ export class WaitinglistApi {
     this.client.interceptors.response.use(
       (response) => response,
       (error: AxiosError) => {
-        const waitinglistError: WaitinglistError = {
-          success: false,
-          error: "Request failed",
-          message: error.message,
-          status: error.response?.status, // Add status for retry logic
-        };
+        let apiErrorMessage = "Request failed";
+        let apiMessage = error.message;
+        let details: Array<{ field: string; message: string }> | undefined;
 
+        // Extract error information from API response
         if (error.response?.data) {
           const errorData = error.response.data as Record<string, unknown>;
-          waitinglistError.error =
-            (errorData.error as string) || "Request failed";
-          waitinglistError.message =
-            (errorData.message as string) || error.message;
-          waitinglistError.details = errorData.details as Array<{
+
+          // Prioritize API error message over axios error message
+          if (errorData.error && typeof errorData.error === "string") {
+            apiErrorMessage = errorData.error;
+          }
+
+          if (errorData.message && typeof errorData.message === "string") {
+            apiMessage = errorData.message;
+          }
+
+          details = errorData.details as Array<{
             field: string;
             message: string;
           }>;
         }
+
+        const waitinglistError: WaitinglistError = {
+          success: false,
+          error: apiErrorMessage,
+          message: apiMessage,
+          status: error.response?.status,
+          details,
+        };
 
         throw waitinglistError;
       }
