@@ -28,7 +28,12 @@ export const NameField: React.FC<NameFieldProps> = ({
   const fieldStyle = { ...fieldConfig.style, ...style };
 
   return (
-    <div style={{ marginBottom: noMargin ? "0" : "1rem" }}>
+    <div
+      style={{
+        marginBottom: noMargin ? "0" : "1rem",
+        position: noMargin ? "relative" : "static",
+      }}
+    >
       {fieldConfig.label && (
         <label
           style={{
@@ -76,9 +81,18 @@ export const NameField: React.FC<NameFieldProps> = ({
       {error && (
         <div
           style={{
-            marginTop: "0.25rem",
+            marginTop: noMargin ? "0.125rem" : "0.25rem",
             fontSize: "0.875rem",
             color: "#ef4444",
+            position: noMargin ? "absolute" : "static",
+            top: noMargin ? "100%" : "auto",
+            left: noMargin ? "0" : "auto",
+            right: noMargin ? "0" : "auto",
+            zIndex: noMargin ? "10" : "auto",
+            backgroundColor: noMargin ? "white" : "transparent",
+            padding: noMargin ? "0.125rem 0.25rem" : "0",
+            borderRadius: noMargin ? "0.25rem" : "0",
+            boxShadow: noMargin ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
           }}
         >
           {error ||

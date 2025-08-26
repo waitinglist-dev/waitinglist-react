@@ -143,6 +143,47 @@ function AdvancedExample({ apiKey }: { apiKey: string }) {
   );
 }
 
+// Horizontal Layout Example
+function HorizontalExample({ apiKey }: { apiKey: string }) {
+  const handleSuccess = (data: WaitinglistEntry) => {
+    alert(`Horizontal form success! You're #${data.position} in line.`);
+    console.log("Horizontal form success:", data);
+  };
+
+  const handleError = (error: any) => {
+    alert(`Horizontal form error: ${error.message}`);
+    console.error("Horizontal form error:", error);
+  };
+
+  return (
+    <WaitinglistForm
+      apiKey={apiKey}
+      layout="horizontal"
+      fields={{
+        email: {
+          label: "Email",
+          required: true,
+          placeholder: "your@email.com",
+        },
+        name: {
+          label: "Name",
+          placeholder: "Your name",
+        },
+        phone: {
+          label: "Phone",
+          defaultCountry: "US",
+          showFlag: true,
+          allowCountryChange: true,
+        },
+      }}
+      submitButtonText="Join Waitinglist"
+      onSuccess={handleSuccess}
+      onError={handleError}
+      tags={["horizontal-layout"]}
+    />
+  );
+}
+
 // Custom Form Example with Individual Components
 function CustomExample({ apiKey }: { apiKey: string }) {
   const [formData, setFormData] = useState({
@@ -355,6 +396,67 @@ function App() {
   }}
   submitButtonText="Join Our Beta"
   successMessage="Thanks for joining our beta program!"
+/>`}</code>
+        </pre>
+      </div>
+
+      <div style={{ marginBottom: "3rem" }}>
+        <h2
+          style={{
+            color: "#374151",
+            borderBottom: "2px solid #e5e7eb",
+            paddingBottom: "0.5rem",
+            marginBottom: "1rem",
+          }}
+        >
+          Horizontal Layout
+        </h2>
+        <p>Form with horizontal layout for better space utilization:</p>
+        <div
+          style={{
+            border: "2px dashed #d1d5db",
+            padding: "2rem",
+            borderRadius: "0.5rem",
+            background: "#f9fafb",
+            marginBottom: "1rem",
+          }}
+        >
+          <HorizontalExample apiKey={apiKey} />
+        </div>
+        <pre
+          style={{
+            background: "#1e293b",
+            color: "#e2e8f0",
+            padding: "1rem",
+            borderRadius: "0.5rem",
+            overflowX: "auto",
+            fontSize: "0.875rem",
+            margin: "1rem 0",
+          }}
+        >
+          <code>{`import { WaitinglistForm } from '@waitinglist/react';
+
+<WaitinglistForm
+  apiKey="wl_demo_key"
+  layout="horizontal"
+  fields={{
+    email: { 
+      label: "Email", 
+      required: true,
+      placeholder: "your@email.com" 
+    },
+    name: { 
+      label: "Name",
+      placeholder: "Your name" 
+    },
+    phone: { 
+      label: "Phone",
+      defaultCountry: "US",
+      showFlag: true,
+      allowCountryChange: true 
+    }
+  }}
+  submitButtonText="Join Waitinglist"
 />`}</code>
         </pre>
       </div>
