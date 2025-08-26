@@ -25,7 +25,12 @@ export default defineConfig({
       fileName: (format) => `index.${format === "es" ? "es" : "umd"}.js`,
     },
     rollupOptions: {
-      external: ["react", "react-dom", "react/jsx-runtime", "react-phone-number-input"],
+      external: [
+        "react",
+        "react-dom",
+        "react/jsx-runtime",
+        "react-phone-number-input",
+      ],
       output: {
         globals: {
           react: "React",

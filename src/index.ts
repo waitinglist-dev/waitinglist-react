@@ -1,3 +1,6 @@
+// Styles
+import "./styles.css";
+
 // Main form component
 export { WaitinglistForm } from "@/components/WaitinglistForm";
 
