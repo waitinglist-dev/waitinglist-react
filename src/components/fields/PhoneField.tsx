@@ -166,7 +166,7 @@ export const PhoneField: React.FC<PhoneFieldProps> = ({
           placeholder={finalPlaceholder}
           maskChar=" "
         >
-          {(inputProps: any) => (
+          {(inputProps: React.InputHTMLAttributes<HTMLInputElement>) => (
             <input
               {...inputProps}
               type="tel"
