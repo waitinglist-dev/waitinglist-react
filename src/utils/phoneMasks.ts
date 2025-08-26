@@ -384,8 +384,9 @@ export function validatePhoneNumber(
     return false;
   }
 
-  // Count digits (excluding dial code)
-  const phoneDigits = phone.replace(/\D/g, "").length;
+  // Count digits excluding the dial code digits
+  const phoneWithoutDialCode = phone.replace(country.dialCode, "").trim();
+  const phoneDigits = phoneWithoutDialCode.replace(/\D/g, "").length;
   const expectedDigits = country.mask.replace(/[^9]/g, "").length;
 
   return phoneDigits === expectedDigits;

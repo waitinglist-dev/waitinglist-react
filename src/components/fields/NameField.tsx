@@ -6,6 +6,7 @@ export interface NameFieldProps extends FieldProps {
   className?: string;
   style?: React.CSSProperties;
   noMargin?: boolean;
+  errorMessage?: string;
 }
 
 export const NameField: React.FC<NameFieldProps> = ({
@@ -18,6 +19,7 @@ export const NameField: React.FC<NameFieldProps> = ({
   className,
   style,
   noMargin = false,
+  errorMessage,
 }) => {
   const fieldConfig = config || {};
   const finalPlaceholder =
@@ -79,7 +81,10 @@ export const NameField: React.FC<NameFieldProps> = ({
             color: "#ef4444",
           }}
         >
-          {error}
+          {error ||
+            errorMessage ||
+            fieldConfig.errorMessage ||
+            "Please enter a valid name"}
         </div>
       )}
     </div>

@@ -56,6 +56,7 @@ export interface FieldConfig {
   disabled?: boolean;
   className?: string;
   style?: React.CSSProperties;
+  errorMessage?: string;
   // Phone-specific options
   defaultCountry?: string;
   customMask?: string;

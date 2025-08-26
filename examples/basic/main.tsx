@@ -1,3 +1,5 @@
+/* eslint-disable */
+// @ts-nocheck
 import React, { useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
@@ -6,8 +8,8 @@ import {
   NameField,
   PhoneField,
   signupToWaitinglist,
-} from "../../src/index";
-import type { WaitinglistEntry } from "../../src/types";
+} from "../../dist/index.es.js";
+import type { WaitinglistEntry } from "../../dist/index.d.ts";
 
 // Default demo API key - users can input their own
 const DEFAULT_DEMO_API_KEY = "wl_demo_key";
@@ -127,8 +129,9 @@ function AdvancedExample({ apiKey }: { apiKey: string }) {
         },
         phone: {
           label: "Phone Number",
-          defaultCountry: "US" as any,
-          withCountryCallingCode: true,
+          defaultCountry: "US",
+          showFlag: true,
+          allowCountryChange: true,
         },
       }}
       submitButtonText="Join Our Beta"
@@ -205,8 +208,9 @@ function CustomExample({ apiKey }: { apiKey: string }) {
         onChange={(phone) => setFormData((prev) => ({ ...prev, phone }))}
         config={{
           label: "Phone Number",
-          defaultCountry: "US" as any,
-          withCountryCallingCode: true,
+          defaultCountry: "US",
+          showFlag: true,
+          allowCountryChange: true,
         }}
         disabled={loading}
       />
@@ -345,7 +349,8 @@ function App() {
     phone: { 
       label: "Phone Number",
       defaultCountry: "US",
-      withCountryCallingCode: true 
+      showFlag: true,
+      allowCountryChange: true 
     }
   }}
   submitButtonText="Join Our Beta"

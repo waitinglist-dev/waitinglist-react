@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import InputMask from "react-input-mask";
+import { IMaskInput } from "react-imask";
 import type { FieldProps } from "@/types";
 import {
   COUNTRY_DATA,
@@ -18,6 +18,7 @@ export interface PhoneFieldProps extends FieldProps {
   showFlag?: boolean;
   allowCountryChange?: boolean;
   noMargin?: boolean;
+  errorMessage?: string;
 }
 
 export const PhoneField: React.FC<PhoneFieldProps> = ({
@@ -35,6 +36,7 @@ export const PhoneField: React.FC<PhoneFieldProps> = ({
   showFlag = true,
   allowCountryChange = true,
   noMargin = false,
+  errorMessage,
 }) => {
   const fieldConfig = config || {};
 
@@ -48,18 +50,24 @@ export const PhoneField: React.FC<PhoneFieldProps> = ({
   });
 
   const countryData = COUNTRY_DATA[selectedCountry];
+
+  // Create mask without dial code since we have a separate country selector
+  const createMaskWithoutDialCode = (originalMask: string) => {
+    if (!originalMask) return "(000) 000-0000";
+    // Remove the dial code part (everything up to and including the first space)
+    const maskWithoutDialCode = originalMask.replace(/^\+\d+\s*/, "");
+    return maskWithoutDialCode || "(000) 000-0000";
+  };
+
   const mask =
     customMask ||
     fieldConfig.customMask ||
-    countryData?.mask ||
-    "+9999999999999";
+    (countryData?.mask
+      ? createMaskWithoutDialCode(countryData.mask)
+      : "(000) 000-0000");
 
   const finalPlaceholder =
-    placeholder ||
-    fieldConfig.placeholder ||
-    (countryData
-      ? `${countryData.dialCode} phone number`
-      : "Enter your phone number");
+    placeholder || fieldConfig.placeholder || "Enter phone number";
 
   const fieldClassName = className || fieldConfig.className || "";
   const fieldStyle = { ...fieldConfig.style, ...style };
@@ -69,31 +77,23 @@ export const PhoneField: React.FC<PhoneFieldProps> = ({
       if (!allowCountryChange) return;
 
       setSelectedCountry(newCountry);
-      const newCountryData = COUNTRY_DATA[newCountry];
-      if (newCountryData) {
-        // Update the phone number to use the new country's dial code
-        onChange(newCountryData.dialCode);
-      }
+      // Don't automatically set dial code - let user type their number
     },
-    [allowCountryChange, onChange]
+    [allowCountryChange]
   );
 
   const handlePhoneChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newValue = e.target.value;
-      onChange(newValue);
-
-      // Auto-detect country if user changes the dial code
-      if (newValue && newValue.startsWith("+")) {
-        const detected = detectCountryFromPhone(newValue);
-        if (detected !== selectedCountry && COUNTRY_DATA[detected]) {
-          setSelectedCountry(detected);
-        }
-      }
+    (phoneNumber: string) => {
+      // Combine dial code with phone number for the full value, with a space for readability
+      const fullPhoneNumber = phoneNumber
+        ? `${countryData?.dialCode || ""} ${phoneNumber}`.trim()
+        : "";
+      onChange(fullPhoneNumber);
     },
-    [onChange, selectedCountry]
+    [onChange, countryData?.dialCode]
   );
 
+  // For validation, use the full phone number that includes the dial code
   const isValid = value ? validatePhoneNumber(value, selectedCountry) : true;
 
   return (
@@ -158,32 +158,27 @@ export const PhoneField: React.FC<PhoneFieldProps> = ({
           </select>
         )}
 
-        <InputMask
+        <IMaskInput
           mask={mask}
-          value={value}
-          onChange={handlePhoneChange}
-          disabled={disabled || fieldConfig.disabled}
+          value={value ? value.replace(/^\+\d+\s*/, "").trim() : ""}
+          onAccept={handlePhoneChange}
           placeholder={finalPlaceholder}
-          maskChar=" "
-          onFocus={(e) => {
-            if (!error && isValid) {
-              e.target.style.borderColor = "#3b82f6";
-            }
+          disabled={disabled || fieldConfig.disabled}
+          lazy={true}
+          placeholderChar={""}
+          definitions={{
+            "9": /[0-9]/, // Redefine '9' to be a required digit instead of optional
           }}
-          onBlur={(e) => {
-            if (!error && isValid) {
-              e.target.style.borderColor = "#d1d5db";
-            }
-          }}
-        >
-          {(inputProps: React.InputHTMLAttributes<HTMLInputElement>) => (
-            <input
-              {...inputProps}
-              type="tel"
-              required={fieldConfig.required}
-              className={fieldClassName}
-              style={{
-                flex: 1,
+          inputRef={(ref) => {
+            // Store ref for focus/blur handling
+            if (ref) {
+              ref.type = "tel";
+              ref.required = fieldConfig.required || false;
+              ref.className = fieldClassName;
+
+              // Apply styles
+              Object.assign(ref.style, {
+                flex: "1",
                 padding: "0.75rem",
                 border: `1px solid ${
                   error || !isValid ? "#ef4444" : "#d1d5db"
@@ -193,10 +188,23 @@ export const PhoneField: React.FC<PhoneFieldProps> = ({
                 outline: "none",
                 transition: "border-color 0.2s",
                 ...fieldStyle,
-              }}
-            />
-          )}
-        </InputMask>
+              });
+
+              // Add event listeners
+              ref.addEventListener("focus", () => {
+                if (!error && isValid) {
+                  ref.style.borderColor = "#3b82f6";
+                }
+              });
+
+              ref.addEventListener("blur", () => {
+                if (!error && isValid) {
+                  ref.style.borderColor = "#d1d5db";
+                }
+              });
+            }
+          }}
+        />
       </div>
 
       {(error || (!isValid && value)) && (
@@ -207,7 +215,10 @@ export const PhoneField: React.FC<PhoneFieldProps> = ({
             color: "#ef4444",
           }}
         >
-          {error || "Please enter a valid phone number"}
+          {error ||
+            errorMessage ||
+            fieldConfig.errorMessage ||
+            "Please enter a valid phone number"}
         </div>
       )}
     </div>

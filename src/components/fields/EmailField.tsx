@@ -6,6 +6,7 @@ export interface EmailFieldProps extends FieldProps {
   className?: string;
   style?: React.CSSProperties;
   noMargin?: boolean;
+  errorMessage?: string;
 }
 
 export const EmailField: React.FC<EmailFieldProps> = ({
@@ -18,6 +19,7 @@ export const EmailField: React.FC<EmailFieldProps> = ({
   className,
   style,
   noMargin = false,
+  errorMessage,
 }) => {
   const fieldConfig = config || {};
   const finalPlaceholder =
@@ -79,7 +81,10 @@ export const EmailField: React.FC<EmailFieldProps> = ({
             color: "#ef4444",
           }}
         >
-          {error}
+          {error ||
+            errorMessage ||
+            fieldConfig.errorMessage ||
+            "Please enter a valid email"}
         </div>
       )}
     </div>
