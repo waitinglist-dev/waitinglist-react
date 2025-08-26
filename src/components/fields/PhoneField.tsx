@@ -40,6 +40,17 @@ export const PhoneField: React.FC<PhoneFieldProps> = ({
 }) => {
   const fieldConfig = config || {};
 
+  // Determine if we should show the country selector
+  // If showFlag is false AND allowCountryChange is false, hide the selector entirely
+  // If showFlag is false BUT allowCountryChange is true, show selector without flags
+  const finalShowFlag = fieldConfig.showFlag ?? showFlag;
+  const finalAllowCountryChange =
+    fieldConfig.allowCountryChange ?? allowCountryChange;
+  const shouldShowCountrySelect =
+    finalShowFlag === false && finalAllowCountryChange === false
+      ? false
+      : fieldConfig.showCountrySelect ?? showCountrySelect;
+
   // Determine country from value or use default
   const [selectedCountry, setSelectedCountry] = useState(() => {
     if (value) {
@@ -115,7 +126,7 @@ export const PhoneField: React.FC<PhoneFieldProps> = ({
       )}
 
       <div style={{ display: "flex", gap: "0.5rem" }}>
-        {showCountrySelect && (
+        {shouldShowCountrySelect && (
           <select
             value={selectedCountry}
             onChange={(e) => handleCountryChange(e.target.value)}
@@ -132,7 +143,7 @@ export const PhoneField: React.FC<PhoneFieldProps> = ({
                 disabled || fieldConfig.disabled || !allowCountryChange
                   ? "not-allowed"
                   : "pointer",
-              minWidth: showFlag ? "80px" : "120px",
+              minWidth: finalShowFlag ? "80px" : "120px",
             }}
             onFocus={(e) => {
               if (!error) {
@@ -149,8 +160,8 @@ export const PhoneField: React.FC<PhoneFieldProps> = ({
               .sort((a, b) => a.name.localeCompare(b.name))
               .map((country) => (
                 <option key={country.code} value={country.code}>
-                  {showFlag && country.emoji ? `${country.emoji} ` : ""}
-                  {showFlag
+                  {finalShowFlag && country.emoji ? `${country.emoji} ` : ""}
+                  {finalShowFlag
                     ? country.dialCode
                     : `${country.name} (${country.dialCode})`}
                 </option>

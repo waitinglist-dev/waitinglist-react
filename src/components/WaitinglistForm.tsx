@@ -236,7 +236,7 @@ export const WaitinglistForm: React.FC<WaitinglistFormProps> = ({
           <div
             style={{
               flex: isHorizontal ? "1" : undefined,
-              minWidth: isHorizontal ? "200px" : undefined,
+              minWidth: isHorizontal ? "250px" : undefined,
             }}
           >
             <PhoneField
