@@ -46,6 +46,35 @@ export interface WaitinglistError {
   }>;
 }
 
+// Validation Types
+export enum ValidationErrorCode {
+  REQUIRED = "REQUIRED",
+  INVALID_EMAIL = "INVALID_EMAIL",
+  INVALID_PHONE = "INVALID_PHONE",
+  TOO_SHORT = "TOO_SHORT",
+  TOO_LONG = "TOO_LONG",
+  INSUFFICIENT_DIGITS = "INSUFFICIENT_DIGITS",
+  TOO_MANY_DIGITS = "TOO_MANY_DIGITS",
+}
+
+export interface ValidationResult {
+  isValid: boolean;
+  errorCode?: ValidationErrorCode;
+}
+
+export interface ValidationFormErrors {
+  email?: ValidationResult;
+  phone?: ValidationResult;
+  name?: ValidationResult;
+}
+
+// Error messages interface (for displaying to users)
+export interface ValidationErrors {
+  email?: string;
+  name?: string;
+  phone?: string;
+}
+
 // Base field config interface (kept for backwards compatibility)
 export interface FieldConfig {
   // Basic field options
@@ -148,10 +177,4 @@ export interface WaitinglistApiOptions {
   apiUrl?: string;
   timeout?: number;
   retries?: number;
-}
-
-export interface ValidationErrors {
-  email?: string;
-  name?: string;
-  phone?: string;
 }

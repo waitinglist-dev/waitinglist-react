@@ -184,6 +184,169 @@ function HorizontalExample({ apiKey }: { apiKey: string }) {
   );
 }
 
+// Test Different Countries Example
+function CountryTestExample({ apiKey }: { apiKey: string }) {
+  const [results, setResults] = useState<any[]>([]);
+  const handleSuccess = (data: WaitinglistEntry, country: string) => {
+    const result = {
+      country,
+      success: true,
+      data,
+      timestamp: new Date().toISOString(),
+    };
+    setResults((prev) => [...prev, result]);
+    console.log(`✅ ${country} form success:`, result);
+  };
+
+  const handleError = (error: any, country: string) => {
+    const result = {
+      country,
+      success: false,
+      error: error.message,
+      timestamp: new Date().toISOString(),
+    };
+    setResults((prev) => [...prev, result]);
+    console.log(`❌ ${country} form error:`, result);
+  };
+
+  return (
+    <div>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+          gap: "1rem",
+          marginBottom: "2rem",
+        }}
+      >
+        {/* Brazil Test */}
+        <div
+          style={{
+            border: "1px solid #ccc",
+            padding: "1rem",
+            borderRadius: "0.5rem",
+          }}
+        >
+          <h4>Brazil (BR) - No Country Change</h4>
+          <WaitinglistForm
+            apiKey={apiKey}
+            fields={{
+              phone: {
+                label: "WhatsApp",
+                defaultCountry: "BR",
+                allowCountryChange: false,
+                showFlag: false,
+                placeholder: "(99) 99999-9999",
+              },
+            }}
+            submitButtonText="Test BR"
+            onSuccess={(data) => handleSuccess(data, "BR")}
+            onError={(error) => handleError(error, "BR")}
+            tags={["test-br"]}
+          />
+        </div>
+
+        {/* US Test */}
+        <div
+          style={{
+            border: "1px solid #ccc",
+            padding: "1rem",
+            borderRadius: "0.5rem",
+          }}
+        >
+          <h4>United States (US) - No Country Change</h4>
+          <WaitinglistForm
+            apiKey={apiKey}
+            fields={{
+              phone: {
+                label: "Phone",
+                defaultCountry: "US",
+                allowCountryChange: false,
+                showFlag: false,
+                placeholder: "(999) 999-9999",
+              },
+            }}
+            submitButtonText="Test US"
+            onSuccess={(data) => handleSuccess(data, "US")}
+            onError={(error) => handleError(error, "US")}
+            tags={["test-us"]}
+          />
+        </div>
+
+        {/* Mexico Test */}
+        <div
+          style={{
+            border: "1px solid #ccc",
+            padding: "1rem",
+            borderRadius: "0.5rem",
+          }}
+        >
+          <h4>Mexico (MX) - No Country Change</h4>
+          <WaitinglistForm
+            apiKey={apiKey}
+            fields={{
+              phone: {
+                label: "Teléfono",
+                defaultCountry: "MX",
+                allowCountryChange: false,
+                showFlag: false,
+                placeholder: "999 999 9999",
+              },
+            }}
+            submitButtonText="Test MX"
+            onSuccess={(data) => handleSuccess(data, "MX")}
+            onError={(error) => handleError(error, "MX")}
+            tags={["test-mx"]}
+          />
+        </div>
+      </div>
+
+      {/* Results Display */}
+      {results.length > 0 && (
+        <div
+          style={{
+            marginTop: "2rem",
+            padding: "1rem",
+            backgroundColor: "#f8fafc",
+            border: "1px solid #e2e8f0",
+            borderRadius: "0.5rem",
+          }}
+        >
+          <h4>Test Results:</h4>
+          <div style={{ maxHeight: "300px", overflowY: "auto" }}>
+            {results.map((result, index) => (
+              <div
+                key={index}
+                style={{
+                  marginBottom: "0.5rem",
+                  padding: "0.5rem",
+                  backgroundColor: result.success ? "#d1fae5" : "#fee2e2",
+                  borderRadius: "0.25rem",
+                  fontSize: "0.875rem",
+                }}
+              >
+                <strong>{result.country}</strong> -{" "}
+                {result.success ? "✅ Success" : "❌ Error"}
+                <br />
+                {result.success ? (
+                  <span>
+                    Position: #{result.data.position}, Phone:{" "}
+                    {result.data.phone}
+                  </span>
+                ) : (
+                  <span>Error: {result.error}</span>
+                )}
+                <br />
+                <small>{result.timestamp}</small>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // Custom Form Example with Individual Components
 function CustomExample({ apiKey }: { apiKey: string }) {
   const [formData, setFormData] = useState({
@@ -459,6 +622,58 @@ function App() {
   submitButtonText="Join Waitinglist"
 />`}</code>
         </pre>
+      </div>
+
+      <div style={{ marginBottom: "3rem" }}>
+        <h2
+          style={{
+            color: "#374151",
+            borderBottom: "2px solid #e5e7eb",
+            paddingBottom: "0.5rem",
+            marginBottom: "1rem",
+          }}
+        >
+          Debug Phone Field
+        </h2>
+        <p>Debug phone field behavior with logging and country restrictions:</p>
+        <div
+          style={{
+            border: "2px dashed #d1d5db",
+            padding: "2rem",
+            borderRadius: "0.5rem",
+            background: "#f9fafb",
+            marginBottom: "1rem",
+          }}
+        >
+          <DebugPhoneExample apiKey={apiKey} />
+        </div>
+      </div>
+
+      <div style={{ marginBottom: "3rem" }}>
+        <h2
+          style={{
+            color: "#374151",
+            borderBottom: "2px solid #e5e7eb",
+            paddingBottom: "0.5rem",
+            marginBottom: "1rem",
+          }}
+        >
+          Country Validation Tests
+        </h2>
+        <p>
+          Test phone validation across different countries with fixed settings:
+        </p>
+        <div
+          style={{
+            border: "2px dashed #d1d5db",
+            padding: "2rem",
+            borderRadius: "0.5rem",
+            background: "#f9fafb",
+            marginBottom: "1rem",
+          }}
+        >
+          <CountryTestExample apiKey={apiKey} />
+        </div>
       </div>
 
       <div className="example">

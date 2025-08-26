@@ -44,6 +44,9 @@ export type {
   PhoneFieldConfig,
   FieldProps,
   ValidationErrors,
+  ValidationErrorCode,
+  ValidationResult,
+  ValidationFormErrors,
 } from "@/types";
 
 export type {

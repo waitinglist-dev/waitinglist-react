@@ -111,6 +111,7 @@ export const PhoneField: React.FC<PhoneFieldProps> = ({
       const fullPhoneNumber = phoneNumber
         ? `${currentCountryData?.dialCode || ""} ${phoneNumber}`.trim()
         : "";
+
       onChange(fullPhoneNumber);
 
       // Auto-detect country only if country change is allowed and we have a value with dial code

@@ -1,13 +1,17 @@
 import React, { useState, useCallback } from "react";
 import { EmailField, NameField, PhoneField } from "@/components/fields";
 import { signupToWaitinglist } from "@/api/waitinglist";
-import { validateForm, hasValidationErrors } from "@/utils/validation";
+import {
+  validateForm,
+  hasValidationErrors,
+  getDefaultErrorMessage,
+} from "@/utils/validation";
+import type { ValidationErrors } from "@/types";
 import type {
   WaitinglistFormProps,
   WaitinglistFormData,
   FieldsConfig,
   FieldConfig,
-  ValidationErrors,
   WaitinglistError,
 } from "@/types";
 
@@ -69,7 +73,11 @@ export const WaitinglistForm: React.FC<WaitinglistFormProps> = ({
       setFormData((prev) => ({ ...prev, [field]: value }));
       // Clear error when user starts typing
       if (errors[field as keyof ValidationErrors]) {
-        setErrors((prev) => ({ ...prev, [field]: undefined }));
+        setErrors((prev) => {
+          const newErrors = { ...prev };
+          delete newErrors[field as keyof ValidationErrors];
+          return newErrors;
+        });
       }
       // Clear status messages when user makes changes
       if (submitStatus !== "idle") {
@@ -100,10 +108,26 @@ export const WaitinglistForm: React.FC<WaitinglistFormProps> = ({
     if (disabled || isLoading) return;
 
     // Validate form
-    const validationErrors = validateForm(formData, requiredFields);
+    const validationResults = validateForm(formData, requiredFields);
 
-    if (hasValidationErrors(validationErrors)) {
-      setErrors(validationErrors);
+    if (hasValidationErrors(validationResults)) {
+      // Convert ValidationResult objects to error message strings
+      const errorMessages: ValidationErrors = {};
+
+      Object.entries(validationResults).forEach(([field, result]) => {
+        if (result && !result.isValid && result.errorCode) {
+          const fieldName = field.charAt(0).toUpperCase() + field.slice(1);
+
+          // Use custom error message from fieldsConfig if available, otherwise use default
+          const customErrorMessage =
+            fieldsConfig?.[field as keyof FieldsConfig]?.errorMessage;
+          errorMessages[field as keyof ValidationErrors] =
+            customErrorMessage ||
+            getDefaultErrorMessage(result.errorCode, fieldName);
+        }
+      });
+
+      setErrors(errorMessages);
       return;
     }
 
