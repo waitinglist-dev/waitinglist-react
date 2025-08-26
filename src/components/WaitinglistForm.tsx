@@ -25,6 +25,8 @@ export const WaitinglistForm: React.FC<WaitinglistFormProps> = ({
   containerStyle,
   submitButtonText = "Join Waitinglist",
   submitButtonProps,
+  submitButtonClassName,
+  submitButtonStyle,
   disabled = false,
   children,
   loadingText = "Joining...",
@@ -205,6 +207,7 @@ export const WaitinglistForm: React.FC<WaitinglistFormProps> = ({
               config={fieldsConfig.email}
               error={errors.email}
               disabled={disabled || isLoading}
+              noMargin={isHorizontal}
               {...getFieldProps(fieldsConfig.email)}
             />
           </div>
@@ -223,6 +226,7 @@ export const WaitinglistForm: React.FC<WaitinglistFormProps> = ({
               config={fieldsConfig.name}
               error={errors.name}
               disabled={disabled || isLoading}
+              noMargin={isHorizontal}
               {...getFieldProps(fieldsConfig.name)}
             />
           </div>
@@ -241,6 +245,7 @@ export const WaitinglistForm: React.FC<WaitinglistFormProps> = ({
               config={fieldsConfig.phone}
               error={errors.phone}
               disabled={disabled || isLoading}
+              noMargin={isHorizontal}
               {...getFieldProps(fieldsConfig.phone)}
             />
           </div>
@@ -258,6 +263,7 @@ export const WaitinglistForm: React.FC<WaitinglistFormProps> = ({
             type="submit"
             disabled={disabled || isLoading}
             {...submitButtonProps}
+            className={submitButtonClassName || submitButtonProps?.className}
             style={{
               width: isHorizontal ? "auto" : "100%",
               padding: "0.75rem 1rem",
@@ -269,9 +275,11 @@ export const WaitinglistForm: React.FC<WaitinglistFormProps> = ({
               fontWeight: "500",
               cursor: disabled || isLoading ? "not-allowed" : "pointer",
               transition: "background-color 0.2s",
-              height: "fit-content",
+              height: isHorizontal ? "fit-content" : "auto",
               whiteSpace: "nowrap",
+              alignSelf: isHorizontal ? "flex-end" : "auto",
               ...submitButtonProps?.style,
+              ...submitButtonStyle,
             }}
             onMouseEnter={(e) => {
               if (!disabled && !isLoading) {

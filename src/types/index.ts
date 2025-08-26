@@ -1,4 +1,6 @@
-import { Country } from "react-phone-number-input";
+import type { EmailFieldProps } from "@/components/fields/EmailField";
+import type { NameFieldProps } from "@/components/fields/NameField";
+import type { PhoneFieldProps } from "@/components/fields/PhoneField";
 
 export interface WaitinglistEntry {
   id: string;
@@ -44,6 +46,7 @@ export interface WaitinglistError {
   }>;
 }
 
+// Base field config interface (kept for backwards compatibility)
 export interface FieldConfig {
   // Basic field options
   placeholder?: string;
@@ -54,13 +57,48 @@ export interface FieldConfig {
   className?: string;
   style?: React.CSSProperties;
   // Phone-specific options
-  defaultCountry?: Country;
-  international?: boolean;
-  withCountryCallingCode?: boolean;
+  defaultCountry?: string;
+  customMask?: string;
+  showCountrySelect?: boolean;
+  showFlag?: boolean;
+  allowCountryChange?: boolean;
+}
+
+// Specific field config interfaces that extend from the field component props
+export interface EmailFieldConfig
+  extends Omit<
+    EmailFieldProps,
+    "value" | "onChange" | "config" | "error" | "disabled"
+  > {
+  label?: string;
+  required?: boolean;
+  disabled?: boolean;
+}
+
+export interface NameFieldConfig
+  extends Omit<
+    NameFieldProps,
+    "value" | "onChange" | "config" | "error" | "disabled"
+  > {
+  label?: string;
+  required?: boolean;
+  disabled?: boolean;
+}
+
+export interface PhoneFieldConfig
+  extends Omit<
+    PhoneFieldProps,
+    "value" | "onChange" | "config" | "error" | "disabled"
+  > {
+  label?: string;
+  required?: boolean;
+  disabled?: boolean;
 }
 
 export type FieldsConfig = {
-  [K in keyof WaitinglistFormData]?: FieldConfig;
+  email?: EmailFieldConfig;
+  name?: NameFieldConfig;
+  phone?: PhoneFieldConfig;
 };
 
 export interface WaitinglistFormData {
@@ -84,6 +122,8 @@ export interface WaitinglistFormProps {
   containerStyle?: React.CSSProperties;
   submitButtonText?: string;
   submitButtonProps?: React.ButtonHTMLAttributes<HTMLButtonElement>;
+  submitButtonClassName?: string;
+  submitButtonStyle?: React.CSSProperties;
   disabled?: boolean;
   children?: React.ReactNode;
   loadingText?: string;

@@ -39,6 +39,9 @@ export type {
   UnsubscribeResponse,
   FieldConfig,
   FieldsConfig,
+  EmailFieldConfig,
+  NameFieldConfig,
+  PhoneFieldConfig,
   FieldProps,
   ValidationErrors,
 } from "@/types";

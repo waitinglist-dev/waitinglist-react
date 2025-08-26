@@ -14,19 +14,12 @@ bun add @waitinglist/react
 pnpm add @waitinglist/react
 ```
 
-**Important:** You need to import the CSS file for phone input styling:
-
-```jsx
-import "@waitinglist/react/dist/style.css";
-```
-
-Add this import once in your main application file (e.g., `src/main.tsx` or `src/index.js`).
+No additional CSS imports are required - all styling is included with the components.
 
 ## Quick Start
 
 ```jsx
 import { WaitinglistForm } from "@waitinglist/react";
-import "@waitinglist/react/dist/style.css";
 
 function App() {
   return (
@@ -49,7 +42,6 @@ The main form component that handles everything for you.
 
 ```jsx
 import { WaitinglistForm } from "@waitinglist/react";
-import "@waitinglist/react/dist/style.css";
 
 <WaitinglistForm
   apiKey="wl_your_api_key_here"
@@ -110,8 +102,9 @@ You can configure individual fields with detailed options and pass any props tha
       label: "Phone Number",
       placeholder: "+1 (555) 123-4567",
       defaultCountry: "US",
-      withCountryCallingCode: true,
-      international: true,
+      showFlag: true,
+      showCountrySelect: true,
+      allowCountryChange: true,
       className: "phone-input",
       style: { borderColor: "#3b82f6" },
     },
@@ -127,7 +120,7 @@ You can configure individual fields with detailed options and pass any props tha
 
 - `className` and `style` for custom styling
 - `placeholder` for custom placeholders
-- Phone-specific props like `defaultCountry`, `international`, `withCountryCallingCode`
+- Phone-specific props like `defaultCountry`, `showFlag`, `showCountrySelect`, `allowCountryChange`
 - Any other component-specific props
 
 **Layout Options**: Use the `layout` prop to control form orientation:
@@ -143,11 +136,11 @@ For custom layouts, use individual field components:
 
 ```jsx
 import { EmailField, NameField, PhoneField } from "@waitinglist/react";
-import "@waitinglist/react/dist/style.css";
 
 function CustomForm() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
 
   return (
     <div>
@@ -166,6 +159,15 @@ function CustomForm() {
         config={{
           label: "Your Name",
           placeholder: "John Doe",
+        }}
+      />
+      <PhoneField
+        value={phone}
+        onChange={setPhone}
+        config={{
+          label: "Phone Number",
+          defaultCountry: "US",
+          showFlag: true,
         }}
       />
     </div>
@@ -227,7 +229,6 @@ import type {
   WaitinglistError,
 } from "@waitinglist/react";
 import { WaitinglistForm } from "@waitinglist/react";
-import "@waitinglist/react/dist/style.css";
 
 const MyForm: React.FC<WaitinglistFormProps> = (props) => {
   const handleSuccess = (data: WaitinglistEntry) => {
@@ -277,7 +278,6 @@ The components come with sensible default styles but are fully customizable:
 
 ```jsx
 import { WaitinglistForm } from "@waitinglist/react";
-import "@waitinglist/react/dist/style.css";
 
 <WaitinglistForm
   apiKey="wl_your_api_key"
@@ -304,7 +304,6 @@ import "@waitinglist/react/dist/style.css";
 
 ```jsx
 import { WaitinglistForm } from "@waitinglist/react";
-import "@waitinglist/react/dist/style.css";
 
 export default function LandingPage() {
   return (
@@ -327,11 +326,15 @@ export default function LandingPage() {
 
 ```jsx
 import { useState } from "react";
-import { EmailField, NameField, signupToWaitinglist } from "@waitinglist/react";
-import "@waitinglist/react/dist/style.css";
+import {
+  EmailField,
+  NameField,
+  PhoneField,
+  signupToWaitinglist,
+} from "@waitinglist/react";
 
 export default function CustomSignup() {
-  const [formData, setFormData] = useState({ email: "", name: "" });
+  const [formData, setFormData] = useState({ email: "", name: "", phone: "" });
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -362,6 +365,12 @@ export default function CustomSignup() {
         config={{ label: "Full Name" }}
       />
 
+      <PhoneField
+        value={formData.phone}
+        onChange={(phone) => setFormData((prev) => ({ ...prev, phone }))}
+        config={{ label: "Phone Number", defaultCountry: "US" }}
+      />
+
       <button type="submit" disabled={loading}>
         {loading ? "Joining..." : "Join Waitinglist"}
       </button>
@@ -376,7 +385,6 @@ The package provides comprehensive error handling:
 
 ```jsx
 import { WaitinglistForm } from "@waitinglist/react";
-import "@waitinglist/react/dist/style.css";
 
 <WaitinglistForm
   apiKey="wl_your_api_key"
