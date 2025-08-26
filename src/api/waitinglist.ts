@@ -43,6 +43,7 @@ export class WaitinglistApi {
           success: false,
           error: "Request failed",
           message: error.message,
+          status: error.response?.status, // Add status for retry logic
         };
 
         if (error.response?.data) {
@@ -69,7 +70,16 @@ export class WaitinglistApi {
     try {
       return await requestFn();
     } catch (error) {
-      if (attempt < this.retries) {
+      // Don't retry on client errors (4xx) - these are permanent failures
+      const isClientError =
+        error &&
+        typeof error === "object" &&
+        "status" in error &&
+        typeof error.status === "number" &&
+        error.status >= 400 &&
+        error.status < 500;
+
+      if (attempt < this.retries && !isClientError) {
         // Exponential backoff: wait 2^attempt seconds
         const delay = Math.pow(2, attempt) * 1000;
         await new Promise((resolve) => setTimeout(resolve, delay));

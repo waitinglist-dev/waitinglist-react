@@ -40,6 +40,7 @@ export interface WaitinglistError {
   success: false;
   error: string;
   message?: string;
+  status?: number; // HTTP status code for retry logic
   details?: Array<{
     field: string;
     message: string;

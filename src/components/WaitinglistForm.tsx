@@ -165,12 +165,15 @@ export const WaitinglistForm: React.FC<WaitinglistFormProps> = ({
       console.error("Waitinglist signup error:", error);
 
       setSubmitStatus("error");
-      const errorObj = error as {
-        error?: string;
-        message?: string;
-        details?: Array<{ field: string; message: string }>;
-      };
-      const message = errorObj.error || errorObj.message || errorMessage;
+      const errorObj = error as WaitinglistError;
+
+      // Prioritize API error message over generic frontend message
+      let message = errorMessage; // Default fallback
+      if (errorObj.error) {
+        message = errorObj.error; // API error message has highest priority
+      } else if (errorObj.message) {
+        message = errorObj.message; // API message as secondary priority
+      }
 
       if (showMessages) {
         setStatusMessage(message);
