@@ -14,10 +14,19 @@ bun add @waitinglist/react
 pnpm add @waitinglist/react
 ```
 
+**Important:** You need to import the CSS file for phone input styling:
+
+```jsx
+import "@waitinglist/react/dist/style.css";
+```
+
+Add this import once in your main application file (e.g., `src/main.tsx` or `src/index.js`).
+
 ## Quick Start
 
 ```jsx
 import { WaitinglistForm } from "@waitinglist/react";
+import "@waitinglist/react/dist/style.css";
 
 function App() {
   return (
@@ -39,6 +48,9 @@ function App() {
 The main form component that handles everything for you.
 
 ```jsx
+import { WaitinglistForm } from "@waitinglist/react";
+import "@waitinglist/react/dist/style.css";
+
 <WaitinglistForm
   apiKey="wl_your_api_key_here"
   fields={["email", "name", "phone"]}
@@ -46,55 +58,84 @@ The main form component that handles everything for you.
   onError={(error) => console.error("Error:", error)}
   submitButtonText="Join Our Waitinglist"
   successMessage="Thanks for joining!"
-/>
+/>;
 ```
 
 #### Props
 
-| Prop               | Type                         | Default                  | Description                  |
-| ------------------ | ---------------------------- | ------------------------ | ---------------------------- |
-| `apiKey`           | `string`                     | _required_               | Your waitinglist.dev API key |
-| `fields`           | `string[]` or `FieldsConfig` | `['email', 'name']`      | Fields to show in the form   |
-| `onSuccess`        | `(data) => void`             | -                        | Called when signup succeeds  |
-| `onError`          | `(error) => void`            | -                        | Called when signup fails     |
-| `onSubmit`         | `(data) => void`             | -                        | Called before API request    |
-| `submitButtonText` | `string`                     | `'Join Waitinglist'`     | Submit button text           |
-| `loadingText`      | `string`                     | `'Joining...'`           | Loading state text           |
-| `successMessage`   | `string`                     | `'Successfully joined!'` | Success message              |
-| `errorMessage`     | `string`                     | `'Something went wrong'` | Error message                |
-| `showMessages`     | `boolean`                    | `true`                   | Show success/error messages  |
-| `resetOnSuccess`   | `boolean`                    | `true`                   | Reset form after success     |
-| `disabled`         | `boolean`                    | `false`                  | Disable the entire form      |
-| `tags`             | `string[]`                   | `[]`                     | Tags to add to signups       |
-| `className`        | `string`                     | -                        | CSS class for form           |
-| `style`            | `object`                     | -                        | Inline styles for form       |
+| Prop                 | Type                           | Default                  | Description                        |
+| -------------------- | ------------------------------ | ------------------------ | ---------------------------------- |
+| `apiKey`             | `string`                       | _required_               | Your waitinglist.dev API key       |
+| `fields`             | `string[]` or `FieldsConfig`   | `['email', 'name']`      | Fields to show in the form         |
+| `layout`             | `'vertical'` or `'horizontal'` | `'vertical'`             | Form layout orientation            |
+| `onSuccess`          | `(data) => void`               | -                        | Called when signup succeeds        |
+| `onError`            | `(error) => void`              | -                        | Called when signup fails           |
+| `onSubmit`           | `(data) => void`               | -                        | Called before API request          |
+| `submitButtonText`   | `string`                       | `'Join Waitinglist'`     | Submit button text                 |
+| `loadingText`        | `string`                       | `'Joining...'`           | Loading state text                 |
+| `successMessage`     | `string`                       | `'Successfully joined!'` | Success message                    |
+| `errorMessage`       | `string`                       | `'Something went wrong'` | Error message                      |
+| `showMessages`       | `boolean`                      | `true`                   | Show success/error messages        |
+| `resetOnSuccess`     | `boolean`                      | `true`                   | Reset form after success           |
+| `disabled`           | `boolean`                      | `false`                  | Disable the entire form            |
+| `tags`               | `string[]`                     | `[]`                     | Tags to add to signups             |
+| `className`          | `string`                       | -                        | CSS class for form element         |
+| `style`              | `object`                       | -                        | Inline styles for form element     |
+| `containerClassName` | `string`                       | -                        | CSS class for fields container     |
+| `containerStyle`     | `object`                       | -                        | Inline styles for fields container |
 
 #### Advanced Field Configuration
 
-You can configure individual fields with detailed options:
+You can configure individual fields with detailed options and pass any props that the individual field components accept:
 
 ```jsx
 <WaitinglistForm
   apiKey="wl_your_api_key_here"
+  layout="horizontal"
   fields={{
     email: {
-      label: "Email Address",
-      placeholder: "Enter your email",
+      label: "Work Email",
+      placeholder: "you@company.com",
       required: true,
+      className: "custom-email-field",
+      style: { borderRadius: "8px", fontSize: "1.1rem" },
     },
     name: {
       label: "Full Name",
       placeholder: "Enter your full name",
       required: false,
+      style: { marginBottom: "1.5rem" },
     },
     phone: {
       label: "Phone Number",
       placeholder: "+1 (555) 123-4567",
-      required: false,
+      defaultCountry: "US",
+      withCountryCallingCode: true,
+      international: true,
+      className: "phone-input",
+      style: { borderColor: "#3b82f6" },
     },
   }}
+  containerClassName="fields-container"
+  containerStyle={{ gap: "2rem", padding: "1rem" }}
+  className="waitinglist-form"
+  style={{ maxWidth: "800px", margin: "0 auto" }}
 />
 ```
+
+**Field Props Override**: You can pass any prop that the individual field components (`EmailField`, `NameField`, `PhoneField`) accept through the fields configuration. This includes:
+
+- `className` and `style` for custom styling
+- `placeholder` for custom placeholders
+- Phone-specific props like `defaultCountry`, `international`, `withCountryCallingCode`
+- Any other component-specific props
+
+**Layout Options**: Use the `layout` prop to control form orientation:
+
+- `layout="vertical"` (default): Fields stack vertically
+- `layout="horizontal"`: Fields align horizontally with responsive design
+
+**Container Styling**: Use `containerClassName` and `containerStyle` to style the fields container separately from the form element.
 
 ### Individual Field Components
 
@@ -102,6 +143,7 @@ For custom layouts, use individual field components:
 
 ```jsx
 import { EmailField, NameField, PhoneField } from "@waitinglist/react";
+import "@waitinglist/react/dist/style.css";
 
 function CustomForm() {
   const [email, setEmail] = useState("");
@@ -184,6 +226,8 @@ import type {
   WaitinglistEntry,
   WaitinglistError,
 } from "@waitinglist/react";
+import { WaitinglistForm } from "@waitinglist/react";
+import "@waitinglist/react/dist/style.css";
 
 const MyForm: React.FC<WaitinglistFormProps> = (props) => {
   const handleSuccess = (data: WaitinglistEntry) => {
@@ -232,6 +276,9 @@ The components come with sensible default styles but are fully customizable:
 ### Inline Styles
 
 ```jsx
+import { WaitinglistForm } from "@waitinglist/react";
+import "@waitinglist/react/dist/style.css";
+
 <WaitinglistForm
   apiKey="wl_your_api_key"
   style={{
@@ -248,7 +295,7 @@ The components come with sensible default styles but are fully customizable:
       padding: "1rem",
     },
   }}
-/>
+/>;
 ```
 
 ## Examples
@@ -257,6 +304,7 @@ The components come with sensible default styles but are fully customizable:
 
 ```jsx
 import { WaitinglistForm } from "@waitinglist/react";
+import "@waitinglist/react/dist/style.css";
 
 export default function LandingPage() {
   return (
@@ -280,6 +328,7 @@ export default function LandingPage() {
 ```jsx
 import { useState } from "react";
 import { EmailField, NameField, signupToWaitinglist } from "@waitinglist/react";
+import "@waitinglist/react/dist/style.css";
 
 export default function CustomSignup() {
   const [formData, setFormData] = useState({ email: "", name: "" });
@@ -326,6 +375,9 @@ export default function CustomSignup() {
 The package provides comprehensive error handling:
 
 ```jsx
+import { WaitinglistForm } from "@waitinglist/react";
+import "@waitinglist/react/dist/style.css";
+
 <WaitinglistForm
   apiKey="wl_your_api_key"
   onError={(error) => {
@@ -339,7 +391,7 @@ The package provides comprehensive error handling:
       });
     }
   }}
-/>
+/>;
 ```
 
 ## Examples

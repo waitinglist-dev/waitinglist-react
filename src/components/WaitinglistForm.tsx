@@ -15,11 +15,14 @@ export const WaitinglistForm: React.FC<WaitinglistFormProps> = ({
   apiKey,
   apiUrl,
   fields = ["email", "name"],
+  layout = "vertical",
   onSuccess,
   onError,
   onSubmit,
   className,
   style,
+  containerClassName,
+  containerStyle,
   submitButtonText = "Join Waitinglist",
   submitButtonProps,
   disabled = false,
@@ -55,7 +58,7 @@ export const WaitinglistForm: React.FC<WaitinglistFormProps> = ({
     .map(([field]: [string, FieldConfig]) => field);
 
   // Ensure at least email is always included
-  if (!fieldsConfig.email) {
+  if (!fieldsConfig.email && Array.isArray(fields) && fields.length === 0) {
     fieldsConfig.email = {};
   }
 
@@ -165,81 +168,126 @@ export const WaitinglistForm: React.FC<WaitinglistFormProps> = ({
     }
   };
 
+  const isHorizontal = layout === "horizontal";
+
   return (
     <form
       onSubmit={handleSubmit}
       className={className}
       style={{
-        maxWidth: "400px",
+        maxWidth: isHorizontal ? "100%" : "400px",
+        display: isHorizontal ? "flex" : "block",
+        flexDirection: isHorizontal ? "column" : undefined,
+        gap: isHorizontal ? "1rem" : undefined,
         ...style,
       }}
     >
-      {fieldsConfig.email && (
-        <EmailField
-          value={formData.email}
-          onChange={(value) => updateField("email", value)}
-          config={fieldsConfig.email}
-          error={errors.email}
-          disabled={disabled || isLoading}
-          {...getFieldProps(fieldsConfig.email)}
-        />
-      )}
-
-      {fieldsConfig.name && (
-        <NameField
-          value={formData.name || ""}
-          onChange={(value) => updateField("name", value)}
-          config={fieldsConfig.name}
-          error={errors.name}
-          disabled={disabled || isLoading}
-          {...getFieldProps(fieldsConfig.name)}
-        />
-      )}
-
-      {fieldsConfig.phone && (
-        <PhoneField
-          value={formData.phone || ""}
-          onChange={(value) => updateField("phone", value)}
-          config={fieldsConfig.phone}
-          error={errors.phone}
-          disabled={disabled || isLoading}
-          {...getFieldProps(fieldsConfig.phone)}
-        />
-      )}
-
-      {children}
-
-      <button
-        type="submit"
-        disabled={disabled || isLoading}
-        {...submitButtonProps}
+      <div
+        className={containerClassName}
         style={{
-          width: "100%",
-          padding: "0.75rem 1rem",
-          backgroundColor: disabled || isLoading ? "#9ca3af" : "#3b82f6",
-          color: "white",
-          border: "none",
-          borderRadius: "0.375rem",
-          fontSize: "1rem",
-          fontWeight: "500",
-          cursor: disabled || isLoading ? "not-allowed" : "pointer",
-          transition: "background-color 0.2s",
-          marginTop: "0.5rem",
-          ...submitButtonProps?.style,
-        }}
-        onMouseEnter={(e) => {
-          if (!disabled && !isLoading) {
-            e.currentTarget.style.backgroundColor = "#2563eb";
-          }
-        }}
-        onMouseLeave={(e) => {
-          if (!disabled && !isLoading) {
-            e.currentTarget.style.backgroundColor = "#3b82f6";
-          }
+          display: isHorizontal ? "flex" : "block",
+          gap: isHorizontal ? "1rem" : undefined,
+          alignItems: isHorizontal ? "flex-end" : undefined,
+          flexWrap: isHorizontal ? "wrap" : undefined,
+          ...containerStyle,
         }}
       >
-        {isLoading ? loadingText : submitButtonText}
-      </button>
+        {fieldsConfig.email && (
+          <div
+            style={{
+              flex: isHorizontal ? "1" : undefined,
+              minWidth: isHorizontal ? "200px" : undefined,
+            }}
+          >
+            <EmailField
+              value={formData.email}
+              onChange={(value) => updateField("email", value)}
+              config={fieldsConfig.email}
+              error={errors.email}
+              disabled={disabled || isLoading}
+              {...getFieldProps(fieldsConfig.email)}
+            />
+          </div>
+        )}
+
+        {fieldsConfig.name && (
+          <div
+            style={{
+              flex: isHorizontal ? "1" : undefined,
+              minWidth: isHorizontal ? "200px" : undefined,
+            }}
+          >
+            <NameField
+              value={formData.name || ""}
+              onChange={(value) => updateField("name", value)}
+              config={fieldsConfig.name}
+              error={errors.name}
+              disabled={disabled || isLoading}
+              {...getFieldProps(fieldsConfig.name)}
+            />
+          </div>
+        )}
+
+        {fieldsConfig.phone && (
+          <div
+            style={{
+              flex: isHorizontal ? "1" : undefined,
+              minWidth: isHorizontal ? "200px" : undefined,
+            }}
+          >
+            <PhoneField
+              value={formData.phone || ""}
+              onChange={(value) => updateField("phone", value)}
+              config={fieldsConfig.phone}
+              error={errors.phone}
+              disabled={disabled || isLoading}
+              {...getFieldProps(fieldsConfig.phone)}
+            />
+          </div>
+        )}
+
+        {children}
+
+        <div
+          style={{
+            flex: isHorizontal ? "0 0 auto" : undefined,
+            marginTop: isHorizontal ? "0" : "0.5rem",
+          }}
+        >
+          <button
+            type="submit"
+            disabled={disabled || isLoading}
+            {...submitButtonProps}
+            style={{
+              width: isHorizontal ? "auto" : "100%",
+              padding: "0.75rem 1rem",
+              backgroundColor: disabled || isLoading ? "#9ca3af" : "#3b82f6",
+              color: "white",
+              border: "none",
+              borderRadius: "0.375rem",
+              fontSize: "1rem",
+              fontWeight: "500",
+              cursor: disabled || isLoading ? "not-allowed" : "pointer",
+              transition: "background-color 0.2s",
+              height: "fit-content",
+              whiteSpace: "nowrap",
+              ...submitButtonProps?.style,
+            }}
+            onMouseEnter={(e) => {
+              if (!disabled && !isLoading) {
+                e.currentTarget.style.backgroundColor = "#2563eb";
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!disabled && !isLoading) {
+                e.currentTarget.style.backgroundColor = "#3b82f6";
+              }
+            }}
+          >
+            {isLoading ? loadingText : submitButtonText}
+          </button>
+        </div>
+      </div>
 
       {showMessages && statusMessage && (
         <div

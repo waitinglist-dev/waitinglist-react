@@ -74,11 +74,14 @@ export interface WaitinglistFormProps {
   apiKey: string;
   apiUrl?: string;
   fields?: (keyof WaitinglistFormData)[] | FieldsConfig;
+  layout?: "vertical" | "horizontal";
   onSuccess?: (data: WaitinglistEntry) => void;
   onError?: (error: WaitinglistError) => void;
   onSubmit?: (data: WaitinglistFormData) => void;
   className?: string;
   style?: React.CSSProperties;
+  containerClassName?: string;
+  containerStyle?: React.CSSProperties;
   submitButtonText?: string;
   submitButtonProps?: React.ButtonHTMLAttributes<HTMLButtonElement>;
   disabled?: boolean;

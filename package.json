@@ -1,11 +1,12 @@
 {
   "name": "@waitinglist/react",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "React components for waitinglist.dev integration",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
+  "style": "dist/style.css",
   "private": false,
   "files": [
     "dist"

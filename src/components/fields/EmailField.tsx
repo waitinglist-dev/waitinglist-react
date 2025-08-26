@@ -5,6 +5,7 @@ export interface EmailFieldProps extends FieldProps {
   placeholder?: string;
   className?: string;
   style?: React.CSSProperties;
+  noMargin?: boolean;
 }
 
 export const EmailField: React.FC<EmailFieldProps> = ({
@@ -16,15 +17,16 @@ export const EmailField: React.FC<EmailFieldProps> = ({
   placeholder,
   className,
   style,
+  noMargin = false,
 }) => {
   const fieldConfig = config || {};
   const finalPlaceholder =
     placeholder || fieldConfig.placeholder || "Enter your email";
   const fieldClassName = className || fieldConfig.className || "";
-  const fieldStyle = { ...style, ...fieldConfig.style };
+  const fieldStyle = { ...fieldConfig.style, ...style };
 
   return (
-    <div style={{ marginBottom: "1rem" }}>
+    <div style={{ marginBottom: noMargin ? "0" : "1rem" }}>
       {fieldConfig.label && (
         <label
           style={{
